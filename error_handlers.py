@@ -1,7 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
 from flask import jsonify
-from app import create_app
 
 class ClientError(Exception, metaclass=ABCMeta):
     def __init__(self):

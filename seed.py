@@ -12,6 +12,14 @@ def seed():
         ),
         is_admin = True
     )
+    User.create(
+        name = 'testUser',
+        email = 'test@test.com',
+        password = generate_password_hash(
+            '123', method='pbkdf2', salt_length=16
+        ),
+        is_admin = False
+    )
 
 
 if __name__ == '__main__':

@@ -3,7 +3,8 @@ from datetime import timedelta
 from flask import (
     Blueprint, 
     jsonify,
-    request
+    request,
+    current_app,
 )
 from flask.views import MethodView
 from flask_jwt_extended import (
@@ -16,7 +17,6 @@ from werkzeug.security import (
     check_password_hash,
 )
 
-from app import create_app
 from extensions import db
 from models.models import (
     User,
@@ -54,8 +54,31 @@ def id_provided_is_none(id):
     if id is None:
         raise APIAuthError('ID was not provided')
 
-# blueprint = Blueprint('user', __name__, url_prefix="/users", static_folder="../static")
+userbp = Blueprint('api', __name__, static_folder="../static")
 
 # @blueprint.route('/')
 # def test():
 #     return jsonify('rer')
+
+class UserAPI(MethodView):
+    def get(self, user_id=None):
+
+        if user_id == None:
+            users = User.query.all()
+            users_schema = UserAdminSchema().dump(users, many=True)
+
+        elif user_id is not None:
+            users = User.query.get(user_id)
+            users_schema = UserAdminSchema().dump(users)
+
+        return jsonify(users_schema), 200
+    
+userbp.add_url_rule(
+    '/user',
+    view_func=UserAPI.as_view('user'),
+    methods=['GET']
+)
+userbp.add_url_rule(
+    '/user/<user_id>',
+    view_func=UserAPI.as_view('user_by_id')
+)

@@ -2,6 +2,7 @@
 from flask import Flask
 from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
+import views.views as views
 
 def create_app(config="settings"):
     app = Flask('Foro-Server')
@@ -24,9 +25,7 @@ def create_app(config="settings"):
     migrate.init_app(app, db)
 
     register_errorhandlers(app)
-    # from views.views import blueprint
-
-    # app.register_blueprint(blueprint)
+    register_blueprints(app)
 
     return app
 
@@ -46,7 +45,16 @@ def register_errorhandlers(app):
     )
 
     app.register_error_handler(ClientError, client_error)
-    app.register_error_handler(404, server_error)
+    # app.register_error_handler(404, server_error)
+    return None
+
+def register_blueprints(app):
+    # from views.views import (
+    #     userbp,
+    # )
+    app.register_blueprint(views.userbp)
+    return None
 
 if __name__ == '__main__':
     app = create_app()
+    
