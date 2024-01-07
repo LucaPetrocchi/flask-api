@@ -3,7 +3,9 @@ from abc import ABCMeta, abstractmethod
 from flask import jsonify
 
 class ClientError(Exception, metaclass=ABCMeta):
-    def __init__(self):
+    def __init__(self, msg=None, *args):
+        super().__init__()
+        self.msg = msg
         pass
 
     @property
@@ -41,7 +43,7 @@ def client_error(err: ClientError):
         'error': err.description
     }
 
-    if err.args:
-        response["message"] = err.args[0]
+    if err.msg:
+        response["message"] = err.msg
 
     return jsonify(response), err.code

@@ -16,8 +16,10 @@ class CRUD(object):
         return instance.save()
     
     def update(self, commit=True, **kwargs):
+        print(kwargs)
         for attr, value in kwargs.items():
-            setattr(self, attr, value)
+            if value is not None:
+                setattr(self, attr, value)
         if commit:
             db.session.commit()
         return self
